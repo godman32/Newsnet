@@ -23,6 +23,7 @@ import com.gm.newsnet.utills.ext.setVisible
 import com.gm.newsnet.utills.listener.OnArticleListener
 import com.gm.newsnet.utills.listener.OnCategoryListener
 import com.gm.newsnet.utills.listener.OnScrollFullListener
+import com.zym.zymresseler.helper.SharedPref
 
 class MainActivity : AppCompatActivity(), OnScrollFullListener, OnArticleListener,
     OnCategoryListener {
@@ -80,6 +81,14 @@ class MainActivity : AppCompatActivity(), OnScrollFullListener, OnArticleListene
     override fun onArticleSelected(data: Article) {
         super.onArticleSelected(data)
         Intent(this, DetailActivity::class.java).also{
+
+//            var sharedPref = SharedPref(this@MainActivity)
+//
+//            if(sharedPref.sData.contains(data.id)){
+//
+//            }
+//            sharedPref.setString(SharedPref.DATA, )
+
             it.putExtra("article", data)
             startActivity(it)
         }

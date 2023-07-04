@@ -1,14 +1,12 @@
 package com.gm.newsnet.news
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import coil.load
-import coil.transform.RoundedCornersTransformation
 import com.gm.newsnet.R
 import com.gm.newsnet.databinding.ItemArticleBinding
 import com.gm.newsnet.utills.constant.Status
@@ -21,10 +19,8 @@ import com.gm.newsnet.utills.listener.OnArticleListener
 import com.gm.newsnet.utills.listener.OnScrollFullListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+
 
 /**
  * Created by @godman on 04/07/23.
@@ -37,7 +33,6 @@ class ArticlesAdapter(
     private var articles = ArrayList<Article>()
 
     var status= Status.FREE
-
 
     fun add(articles: List<Article>) {
         this.articles.addAll(articles)
@@ -53,6 +48,19 @@ class ArticlesAdapter(
 
     class ViewHolder(val binding: ItemArticleBinding) : RecyclerView.ViewHolder(binding.root) {}
 
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        val lp = holder.itemView.layoutParams
+        if (lp != null && lp is StaggeredGridLayoutManager.LayoutParams) {
+            if (holder.layoutPosition % 5 == 0 || holder.layoutPosition== 0) {
+                lp.isFullSpan = true
+            } else{
+                lp.isFullSpan = false
+            }
+        }
+
+        super.onViewAttachedToWindow(holder)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemArticleBinding.inflate(
@@ -61,6 +69,7 @@ class ArticlesAdapter(
                 )
             )
         )
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -101,7 +110,9 @@ class ArticlesAdapter(
             onScrollFullListener.onScrollFull()
         }
 
-        holder.binding.content.setOnClickListener { onArticleListener.onArticleSelected(articles[position]) }
+        holder.binding.content.setOnClickListener {
+            onArticleListener.onArticleSelected(articles[position])
+        }
     }
 
     override fun getItemCount(): Int {
